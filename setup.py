@@ -11,9 +11,11 @@ TEST_REQUIREMENTS = [
     'mock',
 ]
 
+from dynamic_rules import VERSION
+
 setup(
     name="dynamic_rules",
-    version='0.0.1',
+    version=VERSION,
     author="Author Name",
     author_email="author_email",
     description="Allows you to create dynamic rules related to a particular model",
