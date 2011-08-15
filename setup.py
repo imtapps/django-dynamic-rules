@@ -18,7 +18,7 @@ setup(
     author_email="author_email",
     description="Allows you to create dynamic rules related to a particular model",
     long_description=open('README.txt', 'r').read(),
-    url="http://www.example.com",
+    url="https://github.com/imtapps/django-dynamic-rules",
     packages=("dynamic_rules",),
     install_requires=REQUIREMENTS,
     tests_require=TEST_REQUIREMENTS,
