@@ -14,7 +14,7 @@ TEST_REQUIREMENTS = [
 from dynamic_rules import VERSION
 
 setup(
-    name="dynamic_rules",
+    name="django-dynamic-rules",
     version=VERSION,
     author="Author Name",
     author_email="author_email",
