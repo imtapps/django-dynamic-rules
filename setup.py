@@ -16,8 +16,8 @@ from dynamic_rules import VERSION
 setup(
     name="django-dynamic-rules",
     version=VERSION,
-    author="Author Name",
-    author_email="author_email",
+    author="Matthew J. Morrison & Aaron Madison",
+    author_email="mattjmorrison@mattjmorrison.com",
     description="Allows you to create dynamic rules related to a particular model",
     long_description=open('README.txt', 'r').read(),
     url="https://github.com/imtapps/django-dynamic-rules",
