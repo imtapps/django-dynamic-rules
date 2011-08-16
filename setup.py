@@ -37,4 +37,7 @@ setup(
         "Topic :: Software Development",
         "Topic :: Software Development :: Libraries :: Application Frameworks",
     ],
+    dependency_links = (
+        'https://bitbucket.org/twanschik/django-autoload/get/tip.tar.gz#egg=django-autoload',
+    )
 )
