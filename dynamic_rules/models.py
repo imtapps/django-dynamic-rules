@@ -29,6 +29,11 @@ class Rule(models.Model):
     def __unicode__(self):
         return self.name
 
-    def run_action(self, validation_object, *args, **kwargs):
+    def run_action(self, obj, *args, **kwargs):
+        """
+        Obj is any object to be passed to the rule class.
+        It can then be used to determine whether or not the
+        rule applies to that object.
+        """
         rule_class = site.get_rule_class(self.key)
-        rule_class(self, validation_object).run(*args, **kwargs)
+        rule_class(self, obj).run(*args, **kwargs)
