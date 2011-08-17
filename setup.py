@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 REQUIREMENTS = [
     'django',
@@ -21,7 +21,7 @@ setup(
     description="Allows you to create dynamic rules related to a particular model",
     long_description=open('README.txt', 'r').read(),
     url="https://github.com/imtapps/django-dynamic-rules",
-    packages=("dynamic_rules",),
+    packages=find_packages(exclude=["example"]),
     install_requires=REQUIREMENTS,
     tests_require=TEST_REQUIREMENTS,
     test_suite='runtests.runtests',
