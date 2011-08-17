@@ -42,3 +42,6 @@ violation printed.
 This is best used in conjunction with django-dynamic-validation which lets you
 track and store violations to the rules, or django-dynamic-manipulation
 which lets you manipulate other data because of a triggered rule.
+
+ - http://pypi.python.org/pypi/django-dynamic-validation
+ - http://pypi.python.org/pypi/django-dynamic-manipulation
