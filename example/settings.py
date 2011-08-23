@@ -41,6 +41,13 @@ INSTALLED_APPS = (
 )
 
 try:
+    import south
+    INSTALLED_APPS = ('south', ) + INSTALLED_APPS
+    SOUTH_TESTS_MIGRATE = False
+except ImportError:
+    pass
+
+try:
     import django_jenkins
     PROJECT_APPS = [app for app in INSTALLED_APPS if not app.startswith('django.contrib')]
 

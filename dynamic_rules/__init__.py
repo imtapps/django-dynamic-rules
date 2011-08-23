@@ -3,7 +3,7 @@ from dynamic_rules.sites import site
 
 __all__ = ('site',)
 
-VERSION = "0.2.0"
+VERSION = "0.2.1"
 
 def autodiscover():
     from autoload import autodiscover as discover
