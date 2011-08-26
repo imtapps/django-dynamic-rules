@@ -1,12 +1,20 @@
 
 import mock
 from django.utils.unittest import TestCase
+from django import forms
 
 from dynamic_rules.dynamic_actions import BaseDynamicAction
 
 __all__ = (
     'BaseDynamicActionTests',
 )
+
+class TestAction(BaseDynamicAction):
+    trigger_model_name = "my_model"
+
+    fields = {
+        'amount': forms.IntegerField(),
+    }
 
 class BaseDynamicActionTests(TestCase):
 
@@ -20,8 +28,23 @@ class BaseDynamicActionTests(TestCase):
         self.assertEqual(self.trigger_model, action.trigger_model)
 
     def test_sets_trigger_model_name_attribute_on_action_instance_when_present(self):
-        class TestAction(BaseDynamicAction):
-            trigger_model_name = "my_model"
-
         action = TestAction(self.rule_model, self.trigger_model)
         self.assertEqual(action.trigger_model, action.my_model)
+
+    def test_action_class_gets_attribute_from_rule_model_dynamic_fields(self):
+        self.rule_model.dynamic_fields = {'amount': 300}
+        action = TestAction(self.rule_model, self.trigger_model)
+
+        self.assertEqual(300, action.amount)
+
+    def test_rule_model_dynamic_fields_do_not_trump_instance_attributes(self):
+        self.rule_model.dynamic_fields = {'some_amount': 500}
+        action = TestAction(self.rule_model, self.trigger_model)
+        action.some_amount = 1000
+        self.assertEqual(1000, action.some_amount)
+
+    def test_raises_attribute_error_when_accessing_attribute_that_doesnt_exist(self):
+        action = TestAction(self.rule_model, self.trigger_model)
+        with self.assertRaises(AttributeError) as e:
+            action.something
+        self.assertEqual("'TestAction' object has no attribute 'something'", e.exception.message)

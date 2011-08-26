@@ -18,10 +18,9 @@ class SampleRuleOne(BaseDynamicAction):
     }
 
     def run(self, *args, **kwargs):
-        max_value_allowed = self.rule_model.dynamic_fields.get('max_value', 0)
-        if self.trigger_model.value > max_value_allowed:
+        if self.trigger_model.value > self.max_value:
             print "\n\nValue must be less than or equal to %d. Your value was %d\n\n" % \
-                  (max_value_allowed, self.trigger_model.value)
+                  (self.max_value, self.trigger_model.value)
 
 @site.register
 class SampleRuleTwo(BaseDynamicAction):
@@ -34,13 +33,9 @@ class SampleRuleTwo(BaseDynamicAction):
     }
 
     def run(self, *args, **kwargs):
-        min_value_allowed = self.rule_model.dynamic_fields.get('x_value', 0)
-        max_value_allowed = self.rule_model.dynamic_fields.get('y_value', 0)
-        if not (min_value_allowed <= self.trigger_model.value <= max_value_allowed):
+        if not (self.x_value <= self.trigger_model.value <= self.y_value):
             print "\n\nValue must be between %d and %d. Your value was %d\n\n" % \
-                  (min_value_allowed, max_value_allowed, self.trigger_model.value)
-
-
+                  (self.x_value, self.y_value, self.trigger_model.value)
 
 @receiver(db.models.signals.post_save, sender=ModelToCheck, dispatch_uid="check_rules")
 def model_post_save(sender, **kwargs):

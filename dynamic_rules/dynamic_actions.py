@@ -9,6 +9,11 @@ class BaseDynamicAction(object):
         if self.trigger_model_name:
             setattr(self, self.trigger_model_name, self.trigger_model)
 
+    def __getattr__(self, item):
+        if item in self.fields:
+            return self.rule_model.dynamic_fields[item]
+        raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, item))
+
     def run(self, *args, **kwargs):
         """
         Implement this method to actually do something.
