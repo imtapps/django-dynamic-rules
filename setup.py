@@ -8,6 +8,7 @@ REQUIREMENTS = [
     'django-admin-ext',
     'django-autoload',
     'django-fields',
+    'django-class-registry',
 ]
 
 TEST_REQUIREMENTS = [
