@@ -18,12 +18,10 @@ TEST_REQUIREMENTS = [
     'pyflakes',
 ]
 
-from dynamic_rules import VERSION
-
 def do_setup():
     setup(
         name="django-dynamic-rules",
-        version=VERSION,
+        version="0.2.4",
         author="Matthew J. Morrison & Aaron Madison",
         author_email="mattjmorrison@mattjmorrison.com",
         description="Allows you to create dynamic rules related to a particular model",
