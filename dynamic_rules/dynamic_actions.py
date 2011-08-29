@@ -11,7 +11,7 @@ class BaseDynamicAction(object):
 
     def __getattr__(self, item):
         if item in self.fields:
-            return self.rule_model.dynamic_fields[item]
+            return self.fields[item].to_python(self.rule_model.dynamic_fields[item])
         raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, item))
 
     def run(self, *args, **kwargs):

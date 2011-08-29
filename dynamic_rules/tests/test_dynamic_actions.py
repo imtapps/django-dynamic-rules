@@ -1,4 +1,6 @@
 
+import datetime
+
 import mock
 from django.utils.unittest import TestCase
 from django import forms
@@ -14,6 +16,7 @@ class TestAction(BaseDynamicAction):
 
     fields = {
         'amount': forms.IntegerField(),
+        'start_date': forms.DateField(),
     }
 
 class BaseDynamicActionTests(TestCase):
@@ -31,11 +34,22 @@ class BaseDynamicActionTests(TestCase):
         action = TestAction(self.rule_model, self.trigger_model)
         self.assertEqual(action.trigger_model, action.my_model)
 
-    def test_action_class_gets_attribute_from_rule_model_dynamic_fields(self):
-        self.rule_model.dynamic_fields = {'amount': 300}
+    @mock.patch.object(forms.IntegerField, 'to_python')
+    def test_action_class_gets_attribute_from_rule_model_dynamic_fields(self, to_python):
+        self.rule_model.dynamic_fields = {'amount': '300'}
+        action = TestAction(self.rule_model, self.trigger_model)
+
+        amount = action.amount
+
+        to_python.assert_called_once_with('300')
+        self.assertEqual(to_python.return_value, amount)
+
+    def test_returns_fields_to_python_value_when_accessing_attribute_on_action(self):
+        self.rule_model.dynamic_fields = {'amount': '300', 'start_date': '2011-08-29'}
         action = TestAction(self.rule_model, self.trigger_model)
 
         self.assertEqual(300, action.amount)
+        self.assertEqual(datetime.date(2011, 8, 29), action.start_date)
 
     def test_rule_model_dynamic_fields_do_not_trump_instance_attributes(self):
         self.rule_model.dynamic_fields = {'some_amount': 500}
@@ -48,3 +62,4 @@ class BaseDynamicActionTests(TestCase):
         with self.assertRaises(AttributeError) as e:
             action.something
         self.assertEqual("'TestAction' object has no attribute 'something'", e.exception.message)
+
