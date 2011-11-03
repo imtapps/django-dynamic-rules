@@ -14,11 +14,20 @@ class RuleForm(BaseAjaxModelForm):
         rule_choices = [(k, v.display_name) for k, v in site.rules.items()]
         self.fields['key'] = forms.ChoiceField(choices=[('', '---------')] + rule_choices)
 
+    def setup_dynamic_fields(self):
+        super(RuleForm, self).setup_dynamic_fields()
+        key = self.get_value_from_data_or_initial('key')
+
+        if key:
+            rule_clazz = site.get_rule_class(key)
+            customize_form = getattr(rule_clazz, 'customize_form', None)
+            customize_form(self) if customize_form else None
+
     @property
     def dynamic_fields(self):
-        data = self.data or self.initial
-        if 'key' in data:
-            rule_class = site.get_rule_class(data['key'])
+        key = self.get_value_from_data_or_initial('key')
+        if key:
+            rule_class = site.get_rule_class(key)
             self.set_dynamic_field_initial(rule_class)
             return rule_class.fields
         return {}

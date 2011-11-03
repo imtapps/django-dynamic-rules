@@ -26,6 +26,17 @@ class RuleTwo(object):
         'field_three': forms.CharField(),
     }
 
+class RuleThree(object):
+    key = "rule_three"
+    display_name = "Rule Three"
+    fields = {}
+
+    @classmethod
+    def customize_form(cls, form):
+        cls.do_customizations(form)
+
+    do_customizations = None # mock
+
 class AdminRuleFormTests(unittest.TestCase):
 
     def setUp(self):
@@ -33,6 +44,7 @@ class AdminRuleFormTests(unittest.TestCase):
         site._registry = {}
         site.register(RuleOne)
         site.register(RuleTwo)
+        site.register(RuleThree)
 
     def tearDown(self):
         site._registry = self._original_registry
@@ -53,6 +65,7 @@ class AdminRuleFormTests(unittest.TestCase):
             ('', '---------'),
             (RuleOne.key, RuleOne.display_name),
             (RuleTwo.key, RuleTwo.display_name),
+            (RuleThree.key, RuleThree.display_name),
         ], form.fields['key'].choices)
 
     def test_return_empty_dict_when_no_rule_in_data_or_initial(self):
@@ -91,6 +104,32 @@ class AdminRuleFormTests(unittest.TestCase):
 
         form_dynamic_data = form._get_dynamic_data_for_instance()
         self.assertEqual(dynamic_fields, form_dynamic_data)
+
+    @mock.patch.object(RuleThree, "do_customizations")
+    def test_verify_hook_from_setup_is_called_when_form_is_created_with_data(self, customize_form):
+        form_data = dict(key="rule_three")
+        form = admin_forms.RuleForm(data=form_data)
+        customize_form.assert_called_once_with(form)
+
+    @mock.patch.object(RuleThree, "do_customizations")
+    def test_verify_hook_from_setup_is_called_when_form_is_created_with_init(self, customize_form):
+        init_form = dict(key="rule_three")
+        form = admin_forms.RuleForm(initial=init_form)
+        customize_form.assert_called_once_with(form)
+
+    @mock.patch.object(RuleThree, "do_customizations")
+    def test_does_not_call_customize_form_when_key_is_not_available(self, customize_form):
+        admin_forms.RuleForm()
+
+        self.assertFalse(customize_form.called)
+
+    def test_does_not_call_customize_form_when_rule_does_not_define_it(self):
+        form_data = dict(key="rule_one")
+
+        try:
+            admin_forms.RuleForm(data=form_data)
+        except AttributeError:
+            self.fail("should not have raised an Attribute Error")
 
     @mock.patch('dynamic_rules.admin_forms.RuleForm._get_dynamic_data_for_instance')
     def test_sets_dynamic_fields_on_model_and_returns_model_in_save(self, _get_dynamic_data_for_instance):
