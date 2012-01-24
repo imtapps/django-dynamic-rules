@@ -1,9 +1,25 @@
-from class_registry.sites import Registry as _Registry
+
+import warnings
+
+from class_registry import Registry
 
 __all__ = ('site',)
 
-class Registry(_Registry):
-    get_rule_class = _Registry.get_registered_class
-    rules = _Registry.classes
+class RuleRegistry(Registry):
 
-site = Registry()
+    def get_rule_class(self, key):
+        warnings.warn(
+            "Don't access this method anymore. Just use the rule_registry as a dictionary",
+            PendingDeprecationWarning,
+        )
+        return self[key]
+
+    @property
+    def rules(self):
+        warnings.warn(
+            "Don't access this method anymore. Just use the rule_registry as a dictionary",
+            PendingDeprecationWarning,
+        )
+        return self
+
+site = RuleRegistry()

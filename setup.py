@@ -8,7 +8,7 @@ REQUIREMENTS = [
     'django-admin-ext',
     'django-autoload',
     'django-fields',
-    'django-class-registry',
+    'django-class-registry>=0.0.3',
 ]
 
 TEST_REQUIREMENTS = [
@@ -21,7 +21,7 @@ TEST_REQUIREMENTS = [
 def do_setup():
     setup(
         name="django-dynamic-rules",
-        version="0.2.6",
+        version="0.3.0",
         author="Matthew J. Morrison & Aaron Madison",
         author_email="mattjmorrison@mattjmorrison.com",
         description="Allows you to create dynamic rules related to a particular model",

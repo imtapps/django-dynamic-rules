@@ -6,7 +6,8 @@ from django import forms
 
 from djadmin_ext.admin_forms import BaseAjaxModelForm
 
-from dynamic_rules import admin_forms, models, site
+from dynamic_rules import admin_forms, models, rule_registry
+
 
 __all__ = ('AdminRuleFormTests', )
 
@@ -40,14 +41,14 @@ class RuleThree(object):
 class AdminRuleFormTests(unittest.TestCase):
 
     def setUp(self):
-        self._original_registry = site._registry.copy()
-        site._registry = {}
-        site.register(RuleOne)
-        site.register(RuleTwo)
-        site.register(RuleThree)
+        rule_registry.register(RuleOne)
+        rule_registry.register(RuleTwo)
+        rule_registry.register(RuleThree)
 
     def tearDown(self):
-        site._registry = self._original_registry
+        rule_registry.unregister(RuleOne)
+        rule_registry.unregister(RuleTwo)
+        rule_registry.unregister(RuleThree)
 
     def test_rule_form_is_a_subclass_of_base_ajax_model_form(self):
         self.assertTrue(issubclass(admin_forms.RuleForm, BaseAjaxModelForm))

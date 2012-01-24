@@ -1,6 +1,13 @@
+
+"""
+Todo; remove in a future version. No need to add these
+methods anymore, they're only here for backwards compatibility.
+"""
+
 from django.utils import unittest
 
 from dynamic_rules import sites
+
 
 __all__ = ('RegistryTests',)
 
@@ -10,7 +17,7 @@ class RuleOne(object):
 class RegistryTests(unittest.TestCase):
 
     def setUp(self):
-        self.registry = sites.Registry()
+        self.registry = sites.RuleRegistry()
         self.rule = RuleOne
         self.registry.register(self.rule)
 

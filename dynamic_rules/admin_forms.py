@@ -2,7 +2,7 @@ from django import forms
 
 from djadmin_ext.admin_forms import BaseAjaxModelForm
 
-from dynamic_rules import models, site
+from dynamic_rules import models, rule_registry
 
 __all__ = ('RuleForm',)
 
@@ -11,7 +11,7 @@ class RuleForm(BaseAjaxModelForm):
 
     def __init__(self, *args, **kwargs):
         super(RuleForm, self).__init__(*args, **kwargs)
-        rule_choices = [(k, v.display_name) for k, v in site.rules.items()]
+        rule_choices = [(k, v.display_name) for k, v in rule_registry.items()]
         self.fields['key'] = forms.ChoiceField(choices=[('', '---------')] + rule_choices)
 
     def setup_dynamic_fields(self):
@@ -19,15 +19,15 @@ class RuleForm(BaseAjaxModelForm):
         key = self.get_value_from_data_or_initial('key')
 
         if key:
-            rule_clazz = site.get_rule_class(key)
-            customize_form = getattr(rule_clazz, 'customize_form', None)
+            rule_class = rule_registry[key]
+            customize_form = getattr(rule_class, 'customize_form', None)
             customize_form(self) if customize_form else None
 
     @property
     def dynamic_fields(self):
         key = self.get_value_from_data_or_initial('key')
         if key:
-            rule_class = site.get_rule_class(key)
+            rule_class = rule_registry[key]
             self.set_dynamic_field_initial(rule_class)
             return rule_class.fields
         return {}

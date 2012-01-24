@@ -45,3 +45,15 @@ which lets you manipulate other data because of a triggered rule.
 
  - http://pypi.python.org/pypi/django-dynamic-validation
  - http://pypi.python.org/pypi/django-dynamic-manipulation
+
+
+Recent Updates
+--------------
+1/24/2012
+
+Updated dynamic_rules to use latest version of django-class-registry (0.0.3)
+which handles the registry like a dictionary.
+
+'dynamic_rules.site' should now be referred to as 'dynamic_rule.rule_registry'
+however, you can access 'site' for a while. We just believe 'rule_registry'
+is a much better name.

@@ -4,7 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from django_fields import fields as helper_fields
 
-from dynamic_rules import site
+from dynamic_rules import rule_registry
 
 class RuleManager(models.Manager):
 
@@ -35,5 +35,5 @@ class Rule(models.Model):
         It can then be used to determine whether or not the
         rule applies to that object.
         """
-        rule_class = site.get_rule_class(self.key)
+        rule_class = rule_registry[self.key]
         rule_class(self, obj).run(*args, **kwargs)

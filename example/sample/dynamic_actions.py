@@ -3,12 +3,12 @@ from django import db
 from django import forms
 from django.dispatch import receiver
 
-from dynamic_rules import site, models
+from dynamic_rules import rule_registry, models
 from dynamic_rules.dynamic_actions import BaseDynamicAction
 
 from sample.models import ModelToCheck
 
-@site.register
+@rule_registry.register
 class SampleRuleOne(BaseDynamicAction):
     key = "SampleRuleOne"
     display_name = "Warn when the value is above x"
@@ -22,7 +22,7 @@ class SampleRuleOne(BaseDynamicAction):
             print "\n\nValue must be less than or equal to %d. Your value was %d\n\n" % \
                   (self.max_value, self.trigger_model.value)
 
-@site.register
+@rule_registry.register
 class SampleRuleTwo(BaseDynamicAction):
     key = "SampleRuleTwo"
     display_name = "Do something when value is between x and y."

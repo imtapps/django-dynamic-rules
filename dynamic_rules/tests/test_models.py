@@ -4,7 +4,7 @@ import mock
 from django.contrib.contenttypes.models import ContentType
 from django.utils import unittest
 
-from dynamic_rules import models, site
+from dynamic_rules import models, rule_registry
 
 __all__ = ('RuleManagerTests', 'RuleModelTests',)
 
@@ -49,7 +49,7 @@ class RuleModelTests(unittest.TestCase):
 
     def test_run_action_runs_action_for_rule_class(self):
         rule_class = mock.Mock()
-        site.register(rule_class)
+        rule_registry.register(rule_class)
         args = [mock.Mock()]
         kwargs = {'my_mock': mock.Mock()}
         validation_object = mock.Mock()
@@ -59,4 +59,4 @@ class RuleModelTests(unittest.TestCase):
             rule_class.assert_called_once_with(rule, validation_object)
             rule_class.return_value.run.assert_called_once_with(*args, **kwargs)
         finally:
-            site.unregister(rule_class)
+            rule_registry.unregister(rule_class)
