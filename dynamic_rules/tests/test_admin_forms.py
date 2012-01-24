@@ -41,14 +41,21 @@ class RuleThree(object):
 class AdminRuleFormTests(unittest.TestCase):
 
     def setUp(self):
-        rule_registry.register(RuleOne)
-        rule_registry.register(RuleTwo)
-        rule_registry.register(RuleThree)
+        self._test_rule_classes = [RuleOne, RuleTwo, RuleThree]
+        self._original_rules = [r for r in rule_registry.values()]
+
+        self._unregister_rules(*self._original_rules)
+        self._register_rules(*self._test_rule_classes)
 
     def tearDown(self):
-        rule_registry.unregister(RuleOne)
-        rule_registry.unregister(RuleTwo)
-        rule_registry.unregister(RuleThree)
+        self._unregister_rules(*self._test_rule_classes)
+        self._register_rules(*self._original_rules)
+
+    def _unregister_rules(self, *rules):
+        _ = [rule_registry.unregister(r) for r in rules]
+
+    def _register_rules(self, *rules):
+        _ = [rule_registry.register(r) for r in rules]
 
     def test_rule_form_is_a_subclass_of_base_ajax_model_form(self):
         self.assertTrue(issubclass(admin_forms.RuleForm, BaseAjaxModelForm))
