@@ -21,7 +21,7 @@ TEST_REQUIREMENTS = [
 def do_setup():
     setup(
         name="django-dynamic-rules",
-        version="0.3.1",
+        version="0.3.2",
         author="Matthew J. Morrison & Aaron Madison",
         author_email="mattjmorrison@mattjmorrison.com",
         description="Allows you to create dynamic rules related to a particular model",
@@ -33,7 +33,7 @@ def do_setup():
         test_suite='runtests.runtests',
         zip_safe=False,
         classifiers = [
-            "Development Status :: 3 - Alpha",
+            "Development Status :: 5 - Production/Stable",
             "Environment :: Web Environment",
             "Framework :: Django",
             "Intended Audience :: Developers",

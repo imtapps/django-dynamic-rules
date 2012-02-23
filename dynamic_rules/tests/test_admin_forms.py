@@ -103,6 +103,11 @@ class AdminRuleFormTests(unittest.TestCase):
         form = admin_forms.RuleForm(instance=instance)
         self.assertEqual(None, form.fields['field_one'].initial)
 
+    def test_defaults_new_fields_in_rule_that_are_not_already_saved_to_none(self):
+        instance = models.Rule(pk=1, key="rule_two", dynamic_fields={'field_one': "value_one"})
+        form = admin_forms.RuleForm(instance=instance)
+        self.assertEqual(None, form.fields['field_two'].initial)
+
     def test_sets_instance_dynamic_fields_to_dict_of_cleaned_data_dynamic_field_values(self):
         dynamic_fields = {'field_two': "value_two", 'field_three': "value_three"}
         form_data = dict(key="rule_two", name="my_rule", **dynamic_fields)

@@ -35,7 +35,7 @@ class RuleForm(BaseAjaxModelForm):
     def set_dynamic_field_initial(self, rule_class):
         if self.instance.pk:
             for field_name, field in rule_class.fields.items():
-                field.initial = self.instance.dynamic_fields[field_name]
+                field.initial = self.instance.dynamic_fields.get(field_name)
 
     def _get_dynamic_data_for_instance(self):
         dynamic_data = {}
