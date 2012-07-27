@@ -65,7 +65,7 @@ class AdminRuleFormTests(unittest.TestCase):
 
     def test_should_be_a_model_form_for_rule_model_and_limit_fields(self):
         self.assertEqual(models.Rule, admin_forms.RuleForm._meta.model)
-        self.assertEqual(('name', 'key', 'group_object_id', 'content_type'), admin_forms.RuleForm._meta.fields)
+        self.assertEqual(('name', 'key', 'group_object_id', 'secondary_object_id', 'content_type'), admin_forms.RuleForm._meta.fields)
 
     def test_sets_rule_key_choices_to_registered_rules(self):
         form = admin_forms.RuleForm()

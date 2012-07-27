@@ -30,6 +30,17 @@ class RuleManagerTests(unittest.TestCase):
         )
         self.assertEqual(manager.filter.return_value, rules)
 
+    @mock.patch.object(ContentType.objects, 'get_for_model')
+    def test_get_by_secondary_object_returns_rules_for_related_object(self, get_for_model):
+        manager = mock.Mock(spec_set=models.RuleManager)
+        rules = models.RuleManager.get_by_secondary_object(manager, self.model_one)
+
+        manager.filter.assert_called_once_with(
+            content_type=get_for_model.return_value,
+            secondary_object_id=self.model_one.pk,
+        )
+        self.assertEqual(manager.filter.return_value, rules)
+
     def test_get_by_key_returns_get_by_group_object_filtered_by_key(self):
         manager = mock.Mock(spec_set=models.RuleManager)
         group_obj_query = manager.get_by_group_object.return_value

@@ -8,6 +8,10 @@ from dynamic_rules import rule_registry
 
 class RuleManager(models.Manager):
 
+    def get_by_secondary_object(self, obj):
+        content_type = ContentType.objects.get_for_model(obj)
+        return self.filter(content_type=content_type, secondary_object_id=obj.pk)
+
     def get_by_group_object(self, obj):
         content_type = ContentType.objects.get_for_model(obj)
         return self.filter(content_type=content_type, group_object_id=obj.pk)
@@ -19,6 +23,8 @@ class Rule(models.Model):
     content_type = models.ForeignKey('contenttypes.ContentType')
     group_object_id = models.PositiveIntegerField(db_index=True)
     group_object = generic.GenericForeignKey(fk_field='group_object_id')
+    secondary_object_id = models.PositiveIntegerField(db_index=True, default=0)
+    secondary_object = generic.GenericForeignKey(fk_field='secondary_object_id')
 
     name = models.CharField(max_length=100)
     key = models.CharField(max_length=50)

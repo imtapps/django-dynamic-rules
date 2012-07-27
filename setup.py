@@ -9,6 +9,7 @@ REQUIREMENTS = [
     'django-autoload',
     'django-fields',
     'django-class-registry>=0.0.3',
+    'South',
 ]
 
 TEST_REQUIREMENTS = [
@@ -22,7 +23,7 @@ TEST_REQUIREMENTS = [
 def do_setup():
     setup(
         name="django-dynamic-rules",
-        version="0.3.2",
+        version="0.3.3",
         author="Matthew J. Morrison & Aaron Madison",
         author_email="mattjmorrison@mattjmorrison.com",
         description="Allows you to create dynamic rules related to a particular model",
