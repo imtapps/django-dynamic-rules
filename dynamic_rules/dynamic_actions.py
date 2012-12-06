@@ -10,7 +10,7 @@ class BaseDynamicAction(object):
             setattr(self, self.trigger_model_name, self.trigger_model)
 
     def __getattr__(self, item):
-        if item in self.fields:
+        if item in self.fields and item in self.rule_model.dynamic_fields:
             return self.fields[item].to_python(self.rule_model.dynamic_fields[item])
         raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, item))
 

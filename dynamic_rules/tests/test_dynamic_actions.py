@@ -51,6 +51,12 @@ class BaseDynamicActionTests(TestCase):
         self.assertEqual(300, action.amount)
         self.assertEqual(datetime.date(2011, 8, 29), action.start_date)
 
+    def test_raises_attribute_error_when_field_exists_but_not_on_the_models_dynamic_fields(self):
+        self.rule_model.dynamic_fields = {'start_date': '2011-12-12'}
+        action = TestAction(self.rule_model, self.trigger_model)
+        with self.assertRaises(AttributeError) as e:
+            action.amount
+
     def test_rule_model_dynamic_fields_do_not_trump_instance_attributes(self):
         self.rule_model.dynamic_fields = {'some_amount': 500}
         action = TestAction(self.rule_model, self.trigger_model)

@@ -6,7 +6,7 @@ TEST_REQUIREMENTS = [
 
 setup(
     name="django-dynamic-rules",
-    version="0.3.3",
+    version="0.3.4",
     author="Matthew J. Morrison & Aaron Madison",
     author_email="mattjmorrison@mattjmorrison.com",
     description="Allows you to create dynamic rules related to a particular model",
