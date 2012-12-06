@@ -12,7 +12,7 @@ virtualenv $VIRTUALENV_NAME
 . $VIRTUALENV_NAME/bin/activate
 
 find . -name "*.pyc" -delete
-python setup.py install_dev
+pip install -r requirements/ci.txt
 
 python example/manage.py test --with-xunit --with-xcover --cover-package=dynamic_rules
 TEST_EXIT=$?
