@@ -21,12 +21,18 @@ class RuleExtensionManager(models.Manager):
 
     The trigger_model represents the model that the Rule inspects to
     determine what "dynamic action" to take.
+
+    The silent_indicator represents a truthy or falsie variable that will
+    be used to include a filter to remove violations with a silent == True.
     """
 
-    def get_by_trigger_model(self, trigger_model):
+    def get_by_trigger_model(self, trigger_model, silent_indicator=None):
         trigger_content_type = ContentType.objects.get_for_model(trigger_model)
-        return self.filter(trigger_content_type=trigger_content_type, trigger_model_id=trigger_model.pk)
+        search_args = dict(trigger_content_type=trigger_content_type, trigger_model_id=trigger_model.pk)
+        if silent_indicator:
+            search_args['silent'] = False
+        return self.filter(**search_args)
 
-    def get_by_rule(self, rule, trigger_model):
-        base_query = self.get_by_trigger_model(trigger_model)
+    def get_by_rule(self, rule, trigger_model, silent_indicator=None):
+        base_query = self.get_by_trigger_model(trigger_model, silent_indicator)
         return base_query.filter(rule=rule)

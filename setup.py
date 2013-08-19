@@ -6,9 +6,9 @@ TEST_REQUIREMENTS = [
 
 setup(
     name="django-dynamic-rules",
-    version="0.4.0",
-    author="Matthew J. Morrison & Aaron Madison",
-    author_email="mattjmorrison@mattjmorrison.com",
+    version="0.5.0",
+    author="IMT Computer Services",
+    author_email="webadmin@imtapps.com",
     description="Allows you to create dynamic rules related to a particular model",
     long_description=open('README.txt', 'r').read(),
     url="https://github.com/imtapps/django-dynamic-rules",
