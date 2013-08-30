@@ -19,12 +19,11 @@ class RuleExtensionManagerTests(unittest.TestCase):
     @mock.patch.object(ContentType.objects, 'get_for_model')
     def test_get_by_trigger_model_returns_only_silent_rules_for_related_objects_if_silent_indicator_passed(self, get_for_model):
         manager = mock.Mock(spec_set=ext.RuleExtensionManager)
-        violations = ext.RuleExtensionManager.get_by_trigger_model(manager, self.trigger_model, True)
+        violations = ext.RuleExtensionManager.get_by_trigger_model(manager, self.trigger_model)
 
         manager.filter.assert_called_once_with(
             trigger_content_type=get_for_model.return_value,
             trigger_model_id=self.trigger_model.pk,
-            silent=False
         )
         self.assertEqual(manager.filter.return_value, violations)
 
@@ -44,7 +43,7 @@ class RuleExtensionManagerTests(unittest.TestCase):
         manager = mock.Mock(spec_set=ext.RuleExtensionManager)
 
         violations = ext.RuleExtensionManager.get_by_rule(manager, rule, self.trigger_model)
-        manager.get_by_trigger_model.assert_called_once_with(self.trigger_model, None)
+        manager.get_by_trigger_model.assert_called_once_with(self.trigger_model)
         base_query = manager.get_by_trigger_model.return_value
         base_query.filter.assert_called_once_with(rule=rule)
         self.assertEqual(base_query.filter.return_value, violations)
