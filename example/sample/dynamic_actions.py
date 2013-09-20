@@ -19,8 +19,9 @@ class SampleRuleOne(BaseDynamicAction):
 
     def run(self, *args, **kwargs):
         if self.trigger_model.value > self.max_value:
-            print "\n\nValue must be less than or equal to %d. Your value was %d\n\n" % \
-                  (self.max_value, self.trigger_model.value)
+            print("\n\nValue must be less than or equal to %d. Your value was %d\n\n" %
+                  (self.max_value, self.trigger_model.value))
+
 
 @rule_registry.register
 class SampleRuleTwo(BaseDynamicAction):
@@ -34,8 +35,30 @@ class SampleRuleTwo(BaseDynamicAction):
 
     def run(self, *args, **kwargs):
         if not (self.x_value <= self.trigger_model.value <= self.y_value):
-            print "\n\nValue must be between %d and %d. Your value was %d\n\n" % \
-                  (self.x_value, self.y_value, self.trigger_model.value)
+            print("\n\nValue must be between %d and %d. Your value was %d\n\n" %
+                  (self.x_value, self.y_value, self.trigger_model.value))
+
+
+@rule_registry.register
+class SampleRuleThree(BaseDynamicAction):
+    key = "SampleRuleThree"
+    display_name = "A sample rule."
+    category = "Category A"
+
+
+@rule_registry.register
+class SampleRuleFour(BaseDynamicAction):
+    key = "SampleRuleFour"
+    display_name = "Another sample rule."
+    category = "Category A"
+
+
+@rule_registry.register
+class SampleRuleFive(BaseDynamicAction):
+    key = "SampleRuleFive"
+    display_name = "Yet another sample rule."
+    category = "Category B"
+
 
 @receiver(db.models.signals.post_save, sender=ModelToCheck, dispatch_uid="check_rules")
 def model_post_save(sender, **kwargs):

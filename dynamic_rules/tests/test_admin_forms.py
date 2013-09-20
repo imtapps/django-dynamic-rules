@@ -36,7 +36,22 @@ class RuleThree(object):
     def customize_form(cls, form):
         cls.do_customizations(form)
 
-    do_customizations = None # mock
+    do_customizations = None
+
+class RuleFour(object):
+    key = "4"
+    display_name = "Rule Four"
+    category = "Category B"
+
+class RuleFive(object):
+    key = "5"
+    display_name = "Rule Five"
+    category = "Category B"
+
+class RuleSix(object):
+    key = "6"
+    display_name = "Rule Six"
+    category = "Category A"
 
 class AdminRuleFormTests(unittest.TestCase):
 
@@ -67,13 +82,14 @@ class AdminRuleFormTests(unittest.TestCase):
         self.assertEqual(models.Rule, admin_forms.RuleForm._meta.model)
         self.assertEqual(('name', 'key', 'group_object_id', 'secondary_object_id', 'content_type'), admin_forms.RuleForm._meta.fields)
 
-    def test_sets_rule_key_choices_to_registered_rules(self):
+    def test_sets_rule_key_choices_to_registered_rules_in_alphabetical_order(self):
         form = admin_forms.RuleForm()
         self.assertItemsEqual([
             ('', '---------'),
-            (RuleOne.key, RuleOne.display_name),
-            (RuleTwo.key, RuleTwo.display_name),
-            (RuleThree.key, RuleThree.display_name),
+            ('uncategorized', [
+                (RuleOne.key, RuleOne.display_name),
+                (RuleThree.key, RuleThree.display_name),
+                (RuleTwo.key, RuleTwo.display_name), ])
         ], form.fields['key'].choices)
 
     def test_return_empty_dict_when_no_rule_in_data_or_initial(self):
@@ -177,3 +193,41 @@ class AdminRuleFormTests(unittest.TestCase):
 
         modelform_save.assert_called_once_with(form, False)
         model_instance.save.assert_called_once_with()
+
+class AdminRuleFormKeyChoiceFieldTests(unittest.TestCase):
+
+    def setUp(self):
+        self._test_rule_classes = [RuleOne, RuleTwo, RuleThree, RuleFour, RuleFive, RuleSix]
+        self._original_rules = [r for r in rule_registry.values()]
+
+        self._unregister_rules(*self._original_rules)
+        self._register_rules(*self._test_rule_classes)
+
+    def tearDown(self):
+        self._unregister_rules(*self._test_rule_classes)
+        self._register_rules(*self._original_rules)
+
+    def _unregister_rules(self, *rules):
+        _ = [rule_registry.unregister(r) for r in rules]
+
+    def _register_rules(self, *rules):
+        _ = [rule_registry.register(r) for r in rules]
+
+    def test_get_rule_sort_key_returns_display_name(self):
+        sut = [0, mock.Mock(category='test', display_name='name')]
+        self.assertEqual('name', admin_forms.get_rule_sort_key(sut))
+
+    def test_sets_rule_key_choices_to_registered_rules_in_alphabetical_order_within_category_order(self):
+        form = admin_forms.RuleForm()
+        self.assertItemsEqual([
+            ('', '---------'),
+            ('Category A', [
+                (RuleSix.key, RuleSix.display_name), ]),
+            ('Category B', [
+                (RuleFive.key, RuleFive.display_name),
+                (RuleFour.key, RuleFour.display_name), ]),
+            ('uncategorized', [
+                (RuleOne.key, RuleOne.display_name),
+                (RuleThree.key, RuleThree.display_name),
+                (RuleTwo.key, RuleTwo.display_name), ]),
+        ], form.fields['key'].choices)
