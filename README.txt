@@ -27,6 +27,11 @@ The rule class must have the following attributes:
   fields: a dictionary of field_names, and django form classes. This declares
           the parameters available.
 
+The following optional attribute is available:
+  category: a grouping used as the header of an option group in the Key dropdown
+            in the admin to make it easier to organize rules.
+            If a category is not provided, the rule defaults to "uncategorized'.
+
 Additionally, the rule class must accept a rule_model and model_to_check
 as initialization arguments, and have a run method that accepts
 *args and **kwargs.
