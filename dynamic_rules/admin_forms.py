@@ -1,3 +1,5 @@
+import collections
+
 from django import forms
 
 from djadmin_ext.admin_forms import BaseAjaxModelForm
@@ -6,13 +8,28 @@ from dynamic_rules import models, rule_registry
 
 __all__ = ('RuleForm',)
 
+def get_rule_sort_key(x):
+    return x[1].display_name
+
 class RuleForm(BaseAjaxModelForm):
     ajax_change_field = 'key'
 
     def __init__(self, *args, **kwargs):
         super(RuleForm, self).__init__(*args, **kwargs)
-        rule_choices = [(k, v.display_name) for k, v in rule_registry.items()]
-        self.fields['key'] = forms.ChoiceField(choices=[('', '---------')] + rule_choices)
+        self.fields['key'] = forms.ChoiceField(choices=[('', '---------')] + self._get_rule_choices())
+
+    def _get_rule_choices(self):
+        rule_collection = collections.defaultdict(list, uncategorized=[])
+        for (key, item) in self._get_sorted_rules():
+            rule_collection[getattr(item, 'category', 'uncategorized')].append((key, item.display_name))
+        rule_collection = self._order_rule_collection_dictionary_by_category(rule_collection)
+        return [(category, [rule for rule in rule_collection[category]]) for category in rule_collection]
+
+    def _get_sorted_rules(self):
+        return sorted(rule_registry.items(), key=get_rule_sort_key)
+
+    def _order_rule_collection_dictionary_by_category(self, rule_collection):
+        return collections.OrderedDict(sorted(rule_collection.items(), key=lambda t: t[0]))
 
     def setup_dynamic_fields(self):
         super(RuleForm, self).setup_dynamic_fields()
