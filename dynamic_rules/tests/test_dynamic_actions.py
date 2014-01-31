@@ -11,13 +11,15 @@ __all__ = (
     'BaseDynamicActionTests',
 )
 
+
 class TestAction(BaseDynamicAction):
     trigger_model_name = "my_model"
 
     fields = {
-        'amount': forms.IntegerField(),
-        'start_date': forms.DateField(),
+        'amount': lambda: forms.IntegerField(),
+        'start_date': lambda: forms.DateField(),
     }
+
 
 class BaseDynamicActionTests(TestCase):
 
@@ -60,7 +62,7 @@ class BaseDynamicActionTests(TestCase):
     def test_raises_attribute_error_when_field_exists_but_not_on_the_models_dynamic_fields(self):
         self.rule_model.dynamic_fields = {'start_date': '2011-12-12'}
         action = TestAction(self.rule_model, self.trigger_model)
-        with self.assertRaises(AttributeError) as e:
+        with self.assertRaises(AttributeError):
             action.amount
 
     def test_rule_model_dynamic_fields_do_not_trump_instance_attributes(self):
@@ -74,4 +76,3 @@ class BaseDynamicActionTests(TestCase):
         with self.assertRaises(AttributeError) as e:
             action.something
         self.assertEqual("'TestAction' object has no attribute 'something'", e.exception.message)
-
