@@ -1,15 +1,17 @@
 import collections
 
-from django import forms
-
 from djadmin_ext.admin_forms import BaseAjaxModelForm
+from django import forms
 
 from dynamic_rules import models, rule_registry
 
+
 __all__ = ('RuleForm',)
+
 
 def get_rule_sort_key(x):
     return x[1].display_name
+
 
 class RuleForm(BaseAjaxModelForm):
     ajax_change_field = 'key'

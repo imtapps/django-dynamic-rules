@@ -1,15 +1,11 @@
 
 import mock
-
+from djadmin_ext.admin_forms import BaseAjaxModelForm
 from django.utils import unittest
 from django import forms
 
-from djadmin_ext.admin_forms import BaseAjaxModelForm
-
 from dynamic_rules import admin_forms, models, rule_registry
 
-
-__all__ = ('AdminRuleFormTests', )
 
 class RuleOne(object):
     fields = {
@@ -17,6 +13,7 @@ class RuleOne(object):
     }
     key = "rule_one"
     display_name = "Rule One"
+
 
 class RuleTwo(object):
     key = "rule_two"
@@ -26,6 +23,7 @@ class RuleTwo(object):
         'field_two': forms.CharField(),
         'field_three': forms.CharField(),
     }
+
 
 class RuleThree(object):
     key = "rule_three"
@@ -38,20 +36,24 @@ class RuleThree(object):
 
     do_customizations = None
 
+
 class RuleFour(object):
     key = "4"
     display_name = "Rule Four"
     category = "Category B"
+
 
 class RuleFive(object):
     key = "5"
     display_name = "Rule Five"
     category = "Category B"
 
+
 class RuleSix(object):
     key = "6"
     display_name = "Rule Six"
     category = "Category A"
+
 
 class AdminRuleFormTests(unittest.TestCase):
 
@@ -67,10 +69,12 @@ class AdminRuleFormTests(unittest.TestCase):
         self._register_rules(*self._original_rules)
 
     def _unregister_rules(self, *rules):
-        _ = [rule_registry.unregister(r) for r in rules]
+        for r in rules:
+            rule_registry.unregister(r)
 
     def _register_rules(self, *rules):
-        _ = [rule_registry.register(r) for r in rules]
+        for r in rules:
+            rule_registry.register(r)
 
     def test_rule_form_is_a_subclass_of_base_ajax_model_form(self):
         self.assertTrue(issubclass(admin_forms.RuleForm, BaseAjaxModelForm))
@@ -97,15 +101,15 @@ class AdminRuleFormTests(unittest.TestCase):
         self.assertEqual({}, form.dynamic_fields)
 
     def test_returns_dict_of_rule_fields_from_dynamic_fields_property_when_rule_in_data(self):
-        form = admin_forms.RuleForm(data={'key':'rule_one'})
+        form = admin_forms.RuleForm(data={'key': 'rule_one'})
         self.assertEqual(RuleOne.fields, form.dynamic_fields)
 
     def test_returns_dict_of_rule_fields_from_dynamic_fields_property_when_rule_in_initial(self):
-        form = admin_forms.RuleForm(initial={'key':'rule_two'})
+        form = admin_forms.RuleForm(initial={'key': 'rule_two'})
         self.assertEqual(RuleTwo.fields, form.dynamic_fields)
 
     def test_data_trumps_initial_when_getting_rule_class_in_dynamic_fields_property(self):
-        form = admin_forms.RuleForm(data={'key':'rule_one'}, initial={'key': 'rule_two'})
+        form = admin_forms.RuleForm(data={'key': 'rule_one'}, initial={'key': 'rule_two'})
         self.assertEqual(RuleOne.fields, form.dynamic_fields)
 
     def test_sets_initial_data_on_form_field_to_matching_saved_instance_dynamic_fields_value(self):
@@ -194,6 +198,7 @@ class AdminRuleFormTests(unittest.TestCase):
         modelform_save.assert_called_once_with(form, False)
         model_instance.save.assert_called_once_with()
 
+
 class AdminRuleFormKeyChoiceFieldTests(unittest.TestCase):
 
     def setUp(self):
@@ -208,10 +213,12 @@ class AdminRuleFormKeyChoiceFieldTests(unittest.TestCase):
         self._register_rules(*self._original_rules)
 
     def _unregister_rules(self, *rules):
-        _ = [rule_registry.unregister(r) for r in rules]
+        for r in rules:
+            rule_registry.unregister(r)
 
     def _register_rules(self, *rules):
-        _ = [rule_registry.register(r) for r in rules]
+        for r in rules:
+            rule_registry.register(r)
 
     def test_get_rule_sort_key_returns_display_name(self):
         sut = [0, mock.Mock(category='test', display_name='name')]
