@@ -9,7 +9,7 @@ from dynamic_rules import admin_forms, models, rule_registry
 
 class RuleOne(object):
     fields = {
-        'field_one': forms.IntegerField(),
+        'field_one': lambda: forms.IntegerField(),
     }
     key = "rule_one"
     display_name = "Rule One"
@@ -20,8 +20,8 @@ class RuleTwo(object):
     display_name = "Rule Two"
 
     fields = {
-        'field_two': forms.CharField(),
-        'field_three': forms.CharField(),
+        'field_two': lambda: forms.CharField(),
+        'field_three': lambda: forms.CharField(),
     }
 
 
@@ -107,6 +107,11 @@ class AdminRuleFormTests(unittest.TestCase):
     def test_returns_dict_of_rule_fields_from_dynamic_fields_property_when_rule_in_initial(self):
         form = admin_forms.RuleForm(initial={'key': 'rule_two'})
         self.assertEqual(RuleTwo.fields, form.dynamic_fields)
+
+    def test_fields_have_initial_data_set(self):
+        instance = models.Rule(pk=1, key="rule_two", dynamic_fields={'field_two': "testtest"})
+        form = admin_forms.RuleForm(instance=instance)
+        self.assertEqual("testtest", form.fields['field_two'].initial)
 
     def test_data_trumps_initial_when_getting_rule_class_in_dynamic_fields_property(self):
         form = admin_forms.RuleForm(data={'key': 'rule_one'}, initial={'key': 'rule_two'})

@@ -39,6 +39,7 @@ class RuleForm(BaseAjaxModelForm):
 
         if key:
             rule_class = rule_registry[key]
+            self.set_dynamic_field_initial(rule_class)
             customize_form = getattr(rule_class, 'customize_form', None)
             customize_form(self) if customize_form else None
 
@@ -47,14 +48,13 @@ class RuleForm(BaseAjaxModelForm):
         key = self.get_value_from_data_or_initial('key')
         if key:
             rule_class = rule_registry[key]
-            self.set_dynamic_field_initial(rule_class)
             return rule_class.fields
         return {}
 
     def set_dynamic_field_initial(self, rule_class):
         if self.instance.pk:
-            for field_name, field in rule_class.fields.items():
-                field.initial = self.instance.dynamic_fields.get(field_name)
+            for field_name in rule_class.fields:
+                self.fields[field_name].initial = self.instance.dynamic_fields.get(field_name)
 
     def _get_dynamic_data_for_instance(self):
         dynamic_data = {}
