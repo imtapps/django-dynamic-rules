@@ -1,6 +1,7 @@
 django<1.5.0
 django-admin-ext
 django-autoload
+django-cache-machine==0.8
 django-fields
 django-class-registry>=0.0.3
 South

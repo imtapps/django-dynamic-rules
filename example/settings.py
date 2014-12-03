@@ -49,3 +49,10 @@ try:
     SOUTH_TESTS_MIGRATE = False
 except ImportError:
     pass
+
+CACHE_EMPTY_QUERYSETS = True
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    },
+}

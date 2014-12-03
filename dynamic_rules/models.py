@@ -2,11 +2,14 @@ from django.db import models
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 
+from caching.base import CachingManager, CachingMixin
+
 from django_fields import fields as helper_fields
 
 from dynamic_rules import rule_registry
 
-class RuleManager(models.Manager):
+
+class RuleManager(CachingManager):
 
     def get_by_secondary_object(self, obj):
         content_type = ContentType.objects.get_for_model(obj)
@@ -19,7 +22,8 @@ class RuleManager(models.Manager):
     def get_by_key(self, group_object, key):
         return self.get_by_group_object(group_object).filter(key=key)
 
-class Rule(models.Model):
+
+class Rule(CachingMixin, models.Model):
     content_type = models.ForeignKey('contenttypes.ContentType')
     group_object_id = models.PositiveIntegerField(db_index=True)
     group_object = generic.GenericForeignKey(fk_field='group_object_id')
