@@ -20,6 +20,9 @@ class RuleManager(models.Manager):
     def get_by_key(self, group_object, key):
         return self.get_by_group_object(group_object).filter(key=key)
 
+    def get_by_keys(self, group_object, keys):
+        return self.get_by_group_object(group_object).filter(key__in=keys)
+
 
 class Rule(models.Model):
     content_type = models.ForeignKey('contenttypes.ContentType')

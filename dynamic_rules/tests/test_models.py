@@ -53,6 +53,17 @@ class RuleManagerTests(unittest.TestCase):
         group_obj_query.filter.assert_called_once_with(key=key)
         self.assertEqual(group_obj_query.filter.return_value, rules)
 
+    def test_get_by_keys_returns_get_by_group_object_filtered_by_list_of_keys(self):
+        manager = mock.Mock(spec_set=models.RuleManager)
+        group_obj_query = manager.get_by_group_object.return_value
+        keys = ["abc", "def"]
+
+        rules = models.RuleManager.get_by_keys(manager, self.model_one, keys)
+
+        manager.get_by_group_object.assert_called_once_with(self.model_one)
+        group_obj_query.filter.assert_called_once_with(key__in=keys)
+        self.assertEqual(group_obj_query.filter.return_value, rules)
+
 
 class RuleModelTests(unittest.TestCase):
 
