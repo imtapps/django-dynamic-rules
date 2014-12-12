@@ -8,6 +8,7 @@ from dynamic_rules import models, rule_registry
 
 __all__ = ('RuleManagerTests', 'RuleModelTests',)
 
+
 class RuleManagerTests(unittest.TestCase):
 
     def setUp(self):

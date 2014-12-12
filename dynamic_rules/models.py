@@ -6,6 +6,7 @@ from django_fields import fields as helper_fields
 
 from dynamic_rules import rule_registry
 
+
 class RuleManager(models.Manager):
 
     def get_by_secondary_object(self, obj):
@@ -18,6 +19,7 @@ class RuleManager(models.Manager):
 
     def get_by_key(self, group_object, key):
         return self.get_by_group_object(group_object).filter(key=key)
+
 
 class Rule(models.Model):
     content_type = models.ForeignKey('contenttypes.ContentType')
