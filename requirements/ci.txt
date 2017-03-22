@@ -1,5 +1,5 @@
 -r dev.txt
-nosexcover
-pep8
-pyflakes
-flake8
+nosexcover>=1.0.10,<2
+pep8>=1.6.2,<2
+pyflakes>=1.0.0,<2
+flake8>=2.5.2,<3
