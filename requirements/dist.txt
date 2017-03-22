@@ -1,6 +1,6 @@
 django<1.5.0
-django-admin-ext
-django-autoload
-django-fields
+django-admin-ext>=1.0.2,<2
+django-autoload>=0.0.1,<1
+django-fields>=0.2.0,<1
 django-class-registry>=0.0.3
-South
+South>=0.8.4,<1
